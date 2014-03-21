@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Lego 8085 remote control</title>
+<link rel="stylesheet" type="text/css" href="style.css"/>
+<meta name="author" title="Aleksei Yu. Semenov" href="mailto:xls@bk.ru">
+<script>
+function loadCameraPage() {
+	//alert('Hello');
+	
+	window.location.href=document.getElementById('camera_url').value;
+	// document.getElementByID('url').value;
+}
+</script>
+</head>
+<body>
+IP camera URL:
+<input type="text" id="camera_url" value="http://192.168.75.4:8080/videofeed" size="40"/>
+<input type="button" value="go" onclick="loadCameraPage()"/>
+<!--  -->
+</body>
+</html>

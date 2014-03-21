@@ -1,0 +1,36 @@
+input.activeChannel { background-color: yellow; }
+div.redControls { color: red; float: left;}
+
+ul.redControls, ul.blueControls {
+	float:left;
+	width:100%;
+	padding:0;
+	margin:0;
+	list-style-type:none;
+}
+
+ul.setup {
+	width:100%;
+	padding:0;
+	margin:0;
+	list-style-type:none;
+}
+
+
+
+div.blueControls { color: blue; float: right;}
+
+input.RI,input.RU,input.RB,input.RD,input.RR { color: red; 	display: inline; }
+input.BI,input.BU,input.BB,input.BD,input.BR { color: blue; display: inline; } 
+
+input.channel,input.activeChannel,input.RI,input.RU,input.RB,input.RD,input.RR,input.BI,input.BU,input.BB,input.BD,input.BR {font-size: 20pt; } 
+
+/*
+input.RI { float: left;  }
+input.RU { float: left; }
+input.RO { float: left; }
+input.RD { float: left; }
+input.BI { float: left; }
+input.BU { float: left; }
+input.BO { float: left; }
+input.BD { float: left; } */

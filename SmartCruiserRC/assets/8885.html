@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Lego 8085 remote control</title>
+<link rel="stylesheet" type="text/css" href="style.css"/>
+<meta name="author" title="Aleksei Yu. Semenov" href="mailto:xls@bk.ru">
+<script>
+
+
+
+function Lego8085State() {
+	this.channel = 1;
+	this.invertred = false;
+	this.invertblue = false;
+	this.red = 'O';
+	this.blue = 'O';
+}
+
+Lego8085State.prototype.encode = function(){
+  return 'C'+this.channel+'R'+this.red+'B'+this.blue;
+}
+
+Lego8085State.prototype.setChannel = function(c){
+	this.channel = c;
+}
+
+Lego8085State.prototype.getChannel = function(){
+	return this.channel;
+}
+
+Lego8085State.prototype.setInvert = function(color, value){
+	if (color=='red' || color=='blue'){
+		this['invert'+color] = value;
+	}
+}
+
+Lego8085State.prototype.getInvert = function(color){
+	return this['invert'+color];
+}
+
+Lego8085State.prototype.flipInvert = function(color){
+	if (color=='red' || color=='blue'){
+		this['invert'+color] = !this['invert'+color];
+		return this['invert'+color];
+	}
+	return false;
+}
+
+
+Lego8085State.prototype.set = function(color,value){
+	if (color=='red' || color=='blue'){
+		if (this['invert'+color]) {
+			if (value=='U') {
+				value = 'D';
+			} else if (value=='D') {
+				value = 'U';
+			}
+		}		
+		this[color] = value;
+		// FIXME is it correct to modify opposite color?
+		var oppositeColor;
+		if (color=='red'){
+			oppositeColor = 'blue';
+		} else {
+			oppositeColor = 'red';
+		}
+		if (this[oppositeColor]=='B'){
+			this[oppositeColor]=='O'
+		}
+	}
+}
+
+Lego8085State.prototype.get = function(color){
+	return this[color];
+}
+
+var state = new Lego8085State();
+var lastSendTime;
+var lastState;
+
+var touchScreen = false;
+
+function init() {
+	document.querySelector('#log').innerHTML = 'log';
+	
+	//initButtons();
+	updateChannelButtons(state.getChannel());
+	updateInvertButton('redI', state.getInvert('red'));
+	updateInvertButton('blueI', state.getInvert('blue'));
+	
+	window.onkeydown = keyDown;
+	window.onkeyup = keyUp;
+
+}
+/*
+function initButtons() {
+	['#RU', '#RD', '#BU', '#BD'].forEach(function(bid) {
+		document.querySelector(bid).onmousedown = mouseDown;
+		document.querySelector(bid).onmouseup = mouseUp;
+	});
+	
+	['#RB', '#BB'].forEach(function(bid) {
+		document.querySelector(bid).onmousedown = mouseDown;
+	});
+	
+}*/
+
+function updateChannelButtons(c) {
+	for (var i=1; i<=4; i++){
+		if (i==c){
+			document.querySelector('#C'+i).className = 'activeChannel';
+		} else {
+			document.querySelector('#C'+i).className = 'channel';
+		}
+	}
+}
+
+function updateInvertButton(id, value){
+	var control = document.getElementById(id);
+	if (value) {
+		control.value = 'i';
+	} else {
+		control.value = '!';
+	}
+}
+
+function sendState(state) {
+	document.querySelector('#log').innerHTML = state;
+	var start = new Date();
+	if (start - lastSendTime < 1000 && state==lastState) {
+		return; // prevent send overflow
+	}
+	lastSendTime = start;
+	lastState = state;
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function(){
+   		//document.getElementById('timelog').innerHTML = ''+request.readyState;
+   		if (request.readyState==4 && request.status==200) {
+     		var finish = new Date();
+     		document.getElementById('timelog').innerHTML = 'whole request: ' + (finish-start) +' ms, server time: '+request.responseText+' ms';
+     	}
+   	}
+	request.open('GET','/8885/state/'+state,true);
+	request.send();
+}
+
+function _up(color) {
+	state.set(color,'U');
+	sendState(state.encode());
+}
+
+function _down(color) {
+	state.set(color,'D');
+	sendState(state.encode());
+}
+
+function _break(color){
+	state.set(color,'B');
+	sendState(state.encode());
+}
+
+function __break(color){
+	if (touchScreen) {
+		_break(color);
+	}
+}
+
+function _rotate(color){
+  var button = document.getElementById(color+'F');
+  //[color+'F',color+'I',color+'U',color+'B',color+'D']
+  //document.getElementById('log').innerHTML = 
+  
+  var nodeList = document.querySelectorAll('ul.'+color+'Controls li');
+  for (var i=0; i<nodeList.length; i++) {
+  	//document.getElementById('log').innerHTML = id;
+  	if (button.value=='|') {
+  		nodeList.item(i).style.display = 'block';
+  	} else {
+  	  	nodeList.item(i).style.display = 'inline';
+  	} 
+  }
+  
+  if (button.value=='|') {
+  	button.value = '-';
+  	document.getElementById(color+'U').value = '/\\';
+  	document.getElementById(color+'D').value = '\\/';	
+  } else {
+  	document.getElementById(color+'U').value = '<';
+  	document.getElementById(color+'D').value = '>';
+  	button.value = '|';
+  }
+}
+
+function keyDown(e) {
+	if (e.keyCode==38){
+		_up('red');
+	} else if (e.keyCode==40){
+		_down('red');
+	} else if (e.keyCode==37){
+		_up('blue');
+	} else if (e.keyCode==39){
+		_down('blue');
+	} 
+	if (e.keyCode==38 || e.keyCode==40 || e.keyCode==37 || e.keyCode==39){
+		e.preventDefault ? e.preventDefault() : (e.returnValue = false);
+	}
+}
+
+function keyUp(e) {
+	if (e.keyCode==38 || e.keyCode==40){
+		_break('red');
+	} else if (e.keyCode==37 || e.keyCode==39){
+		_break('blue');
+	}
+	if (e.keyCode==38 || e.keyCode==40 || e.keyCode==37 || e.keyCode==39){
+		e.preventDefault ? e.preventDefault() : (e.returnValue = false);
+	}
+}
+
+function touchScreenToggle() {
+	touchScreen = !touchScreen;
+	if (touchScreen) {	
+		document.querySelector('#TS').className = 'activeChannel';
+	} else {
+		document.querySelector('#TS').className = 'channel';
+	}
+}
+
+function _touch(color, direction){
+	if (touchScreen){
+		state.set(color,direction);
+		sendState(state.encode());
+	}
+}
+
+function _mouse(color, direction){
+	if (!touchScreen){
+		state.set(color,direction);
+		sendState(state.encode());		
+	}
+}
+
+
+
+</script>
+</head>
+<body onload="init()">
+
+<div id="pad">
+	<table border="0" width="100%">
+	<tr>
+    <td width="20%"><input id="TS" class="channel" type="button" value="touch screen" onclick="touchScreenToggle()" /></td> 
+    <td><div id="channels">
+<input id="C1" class="channel" type="button" value="1" onclick="state.setChannel(1);updateChannelButtons(1);"/>
+<input id="C2" class="channel" type="button" value="2" onclick="state.setChannel(2);updateChannelButtons(2);"/>
+<input id="C3" class="channel" type="button" value="3" onclick="state.setChannel(3);updateChannelButtons(3);"/>
+<input id="C4" class="channel" type="button" value="4" onclick="state.setChannel(4);updateChannelButtons(4);"/>
+</div></td>
+    <td><div id="log"></div></td>
+    <td><div id="timelog"></div></td>
+  </tr>
+ </table>
+
+<div id="redControls" class="redControls">
+  <ul class="redControls">
+    <li><input type="button" id="redF" class="RR" value="-" onclick="_rotate('red')"/></li> 
+  	<li><input type="button" id="redI" class="RI" onclick="updateInvertButton('redI',state.flipInvert('red'))" value="!"/></li>
+  	<li><input type="button" id="redU" class="RU" onmousedown="_mouse('red','U')" ontouchstart="_touch('red','U')" ontouchend="_touch('red','B')" value="/\"/></li>
+  	<li><input type="button" id="redB" class="RB" onmousedown="_mouse('red','B')" ontouchstart="_touch('red','B')" value="O"/></li>
+  	<li><input type="button" id="redD" class="RD" onmousedown="_mouse('red','D')" ontouchstart="_touch('red','D')" ontouchend="_touch('red','D')" value="\/"/></li>
+  </ul>
+</div>
+
+<div id="redControls" class="blueControls">
+  <ul class="blueControls">
+    <li><input type="button" id="blueF" class="BR" value="-" onclick="_rotate('blue')"/></li> 
+  	<li><input type="button" id="blueI" class="BI" onclick="updateInvertButton('blueI',state.flipInvert('blue'))" value="!"/></li>
+  	<li><input type="button" id="blueU" class="BU" onmousedown="_mouse('blue','U')" ontouchstart="_touch('blue','U')" ontouchend="_touch('blue','B')" value="/\"/></li>
+  	<li><input type="button" id="blueB" class="BB" onmousedown="_mouse('blue','B')" ontouchstart="_touch('blue','B')" value="O"/></li>
+  	<li><input type="button" id="blueD" class="BD" onmousedown="_mouse('blue','D')"	ontouchstart="_touch('blue','D')" ontouchend="_touch('blue','B')" value="\/"/></li>
+  </ul>
+</div>
+</div>
+
+<iframe src="camera.html" width="800" height="660"></iframe>
+
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Smart Cruiser RC</string>
+    <string name="action_settings">Settings</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="open_in_browser">Open in browser</string>
+    <string name="inactive">Service inactive</string>
+    <string name="powerButtonDescription">Power Button</string>
+    <string name="inBrowserButtonDescription">Open in browser button</string>
+    <string name="aboutButtonDescription">About Button</string>
+
+</resources>
