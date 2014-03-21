@@ -10,5 +10,10 @@
     <string name="powerButtonDescription">Power Button</string>
     <string name="inBrowserButtonDescription">Open in browser button</string>
     <string name="aboutButtonDescription">About Button</string>
+    <string name="title_activity_about">About</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="about">About</string>
+    <string name="whats_new">What\'s new</string>
+    <string name="license">License</string>
 
 </resources>
