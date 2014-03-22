@@ -35,8 +35,9 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+//		getMenuInflater().inflate(R.menu.main, menu);
+//		return true;
+		return false;
 	}
 	
 	
@@ -85,6 +86,10 @@ public class MainActivity extends Activity {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://"+ipAddr+":7070/")));
 	}
 	
+	public void onAboutButtonClick(View view){
+		Log.d(LOG_TAG, "before open About activity");
+		startActivity(new Intent(this, AboutActivity.class));
+	}
 	
 	// TODO move to HTTPserver
     public String getLocalIpAddress() {

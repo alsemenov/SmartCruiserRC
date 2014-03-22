@@ -34,8 +34,6 @@
             android:name="com.xibodoh.smartcruiserrc.AboutActivity"
             android:label="@string/about">
         </activity>
-        
-         <activity android:name="com.xibodoh.smartcruiserrc.WebViewActivity" android:label="@string/about"/>
     </application>
 
 </manifest>

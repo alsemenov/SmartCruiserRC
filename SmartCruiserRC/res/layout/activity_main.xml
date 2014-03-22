@@ -42,9 +42,10 @@
         android:layout_alignLeft="@+id/inBrowserButton"
         android:layout_below="@+id/inBrowserButton"
         android:layout_marginTop="32dp"
-        android:src="@drawable/about" 
-        android:background="@android:color/transparent" 
-        android:contentDescription="@string/aboutButtonDescription"/>
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/aboutButtonDescription"
+        android:onClick="onAboutButtonClick"
+        android:src="@drawable/about" />
 
     <TextView
         android:id="@+id/address"

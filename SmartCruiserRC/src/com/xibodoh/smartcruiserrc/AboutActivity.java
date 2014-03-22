@@ -1,40 +1,22 @@
 package com.xibodoh.smartcruiserrc;
 
-import android.app.TabActivity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.app.Activity;
 import android.os.Bundle;
-import android.widget.TabHost;
+import android.view.Menu;
+import android.webkit.WebView;
 
-public class AboutActivity extends TabActivity {
+public class AboutActivity extends Activity {//extends TabActivity {
 
 	   @Override
 	    protected void onCreate(Bundle savedInstanceState ) {
 	        super.onCreate(savedInstanceState);
-	        setTitle("Smart Cruiser RC ("+getAppVersion(this)+")");
-
-	        addTab("about", R.string.about);
-	        addTab("whatsnew", R.string.whats_new);
-	        addTab("gpl-2.0-standalone", R.string.license);
+			setContentView(R.layout.activity_about);
+			WebView webView1 = (WebView) findViewById(R.id.webView1);
+			webView1.loadUrl("file:///android_asset/about.html");
 	    }
 
-	    private void addTab(String name, int titleId) {
-	        Intent intent = new Intent(this, WebViewActivity.class);
-	        intent.putExtra(WebViewActivity.FILENAME, name);
-	        TabHost tabHost = getTabHost();
-	        tabHost.addTab(tabHost.newTabSpec(name)
-	                .setIndicator(getString(titleId), null /*getResources().getDrawable(R.drawable.ic_tab_about)*/)
-	                .setContent(intent));
-	    }
-
-	    public static String getAppVersion(Context context) {
-	        try {
-	            PackageManager manager = context.getPackageManager();                         
-	    		return "v. "+manager.getPackageInfo(context.getPackageName(), 0).versionName;    
-	        } catch (PackageManager.NameNotFoundException e) {
-	            return "";
-	        }
-	    }
-
+		@Override
+		public boolean onCreateOptionsMenu(Menu menu) {
+			return false;
+		}
 }
