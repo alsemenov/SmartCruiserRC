@@ -24,18 +24,20 @@ xibodoh@gmail.com
 Contributors 
 ============
 
-•Aleksei Semenov (aka xibodoh)
+Aleksei Semenov (aka xibodoh)
 
 
 Credits
 =======
 
-•NanoHTTPD - Tiny, easily embeddable HTTP server in Java
-•redfishlab - Samsung Galaxy S4 Remote Control for Lego Power Functions
-•Financisto - open-source personal finance manager for Android platform
+NanoHTTPD - Tiny, easily embeddable HTTP server in Java
+
+redfishlab - Samsung Galaxy S4 Remote Control for Lego Power Functions
+
+Financisto - open-source personal finance manager for Android platform
 
 
 Art
 ===
 
-Icons by Hopstarter, zerode, Icons-Land, Tatice, Morcha. 
+Icons by Hopstarter, zerode, Icons-Land, Tatice, Morcha (all found in http://www.iconarchive.com ). 
