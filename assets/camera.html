@@ -8,22 +8,26 @@
   -->
 <html>
 <head>
-<title>Lego 8085 remote control</title>
+<title>Lego 8085 remote control camera</title>
 <link rel="stylesheet" type="text/css" href="style.css"/>
 <meta name="author" title="Aleksei Yu. Semenov" href="mailto:xls@bk.ru">
 <script>
 function loadCameraPage() {
-	//alert('Hello');
 	
 	window.location.href=document.getElementById('camera_url').value;
-	// document.getElementByID('url').value;
 }
 </script>
 </head>
 <body>
+<p>
 IP camera URL:
 <input type="text" id="camera_url" value="http://192.168.75.4:8080/videofeed" size="40"/>
 <input type="button" value="go" onclick="loadCameraPage()"/>
+</p>
+<p>The application have no embedded camera streamer yet. 
+To get the view from the driver seat of your car you need to install 
+into your android device some third party web camera application, 
+like <a href="https://play.google.com/store/apps/details?id=com.pas.webcam">this one</a><p>  
 <!--  -->
 </body>
 </html>
